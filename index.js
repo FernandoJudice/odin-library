@@ -9,9 +9,22 @@ function Book(title, author, pages, is_read) {
     }
 }
 
-const books = [];
+function Library(books) {
+    this.books = books;
+    this.addBooktoLibrary = function(title, author, pages, is_read) {
+        const newBook = new Book(title, author, pages, is_read);
+        books.push(newBook);
+    }
+    this.removeBook = function(index) {
+        books.splice(index,1);
+    }
+    this.toggleRead = function toggleRead(index) {
+        books[index].read = !books[index].read;
+    }
+}
+
 const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 295, true); // needs instance to iterate through values
-books.push(theHobbit)
+const library = new Library([theHobbit]);
 
 const display = document.querySelector(".display");
 const formContainer = document.querySelector(".formContainer");
@@ -30,10 +43,18 @@ function renderBookList(bookList) {
         if (typeof bookList[0][key] == "function"){
             continue;
         }
-        const col = document.createElement("td");
+        const col = document.createElement("th");
         col.textContent = key;
         row.appendChild(col);
     }
+
+    const checkReadHeader = document.createElement("th");
+    checkReadHeader.textContent = "Toggle Read";
+    row.appendChild(checkReadHeader);
+    
+    const deleteBookHeader = document.createElement("th");
+    deleteBookHeader.textContent = "delete Book";
+    row.appendChild(deleteBookHeader);
 
     for(let [index, book] of bookList.entries()) {
         const row = document.createElement("tr");
@@ -52,31 +73,25 @@ function renderBookList(bookList) {
         const readButton = document.createElement("button");
         readButton.classList.add("myButton");
         readButton.dataset.index = index;
-        readButton.addEventListener("click",()=>{toggleRead(readButton.dataset.index)})
+        readButton.addEventListener("click",()=>{
+            library.toggleRead(readButton.dataset.index);
+            clearBookList();
+            renderBookList(library.books);
+        })
         checkRead.appendChild(readButton);
 
         const deleteBook = document.createElement("td");
-        row.appendChild(checkRead);
+        row.appendChild(deleteBook);
         const deleteButton = document.createElement("button");
         deleteButton.classList.add("myButton");
         deleteButton.dataset.index = index;
-        deleteButton.addEventListener("click",()=>{removeBook(deleteButton.dataset.index)})
-        checkRead.appendChild(deleteButton);
+        deleteButton.addEventListener("click",()=>{
+            library.removeBook(deleteButton.dataset.index);
+            clearBookList();
+            renderBookList(library.books);
+        })
+        deleteBook.appendChild(deleteButton);
     }
-}
-
-
-function toggleRead(index) {
-    books[index].read = !books[index].read;
-    clearBookList();
-    renderBookList(books);
-}
-
-
-function removeBook(index) {
-    books.splice(index,1);
-    clearBookList();
-    renderBookList(books);
 }
 
 
@@ -84,9 +99,9 @@ function submitForm(event) {
     event.preventDefault();
     const form = event.target;
     const { title, author, pages, read } = Object.fromEntries(new FormData(event.target));
-    addBooktoLibrary(title,author,pages,read == "on");
+    library.addBooktoLibrary(title,author,pages,read == "on");
     clearBookList();
-    renderBookList(books);
+    renderBookList(library.books);
     clearForm();
 
 }
@@ -150,9 +165,4 @@ function renderNewBookForm() {
 }
 
 
-function addBooktoLibrary(title, author, pages, is_read) {
-    const newBook = new Book(title, author, pages, is_read);
-    books.push(newBook);
-}
-
-renderBookList(books);
+renderBookList(library.books);
