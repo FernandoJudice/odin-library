@@ -10,13 +10,14 @@ function Book(title, author, pages, is_read) {
 }
 
 const books = [];
-const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 295, true);
+const theHobbit = new Book("The Hobbit", "J.R.R Tolkien", 295, true); // needs instance to iterate through values
 books.push(theHobbit)
 
 const display = document.querySelector(".display");
 const formContainer = document.querySelector(".formContainer");
 const addBookButton = document.querySelector(".myButton");
 addBookButton.onclick = (e) => renderNewBookForm();
+
 
 function renderBookList(bookList) {
     let table = document.createElement("table");
@@ -34,7 +35,7 @@ function renderBookList(bookList) {
         row.appendChild(col);
     }
 
-    for(let book of bookList) {
+    for(let [index, book] of bookList.entries()) {
         const row = document.createElement("tr");
         table.appendChild(row)
         for (let key in book) {
@@ -45,7 +46,37 @@ function renderBookList(bookList) {
             col.textContent = book[key];
             row.appendChild(col);
         }
+
+        const checkRead = document.createElement("td");
+        row.appendChild(checkRead);
+        const readButton = document.createElement("button");
+        readButton.classList.add("myButton");
+        readButton.dataset.index = index;
+        readButton.addEventListener("click",()=>{toggleRead(readButton.dataset.index)})
+        checkRead.appendChild(readButton);
+
+        const deleteBook = document.createElement("td");
+        row.appendChild(checkRead);
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("myButton");
+        deleteButton.dataset.index = index;
+        deleteButton.addEventListener("click",()=>{removeBook(deleteButton.dataset.index)})
+        checkRead.appendChild(deleteButton);
     }
+}
+
+
+function toggleRead(index) {
+    books[index].read = !books[index].read;
+    clearBookList();
+    renderBookList(books);
+}
+
+
+function removeBook(index) {
+    books.splice(index,1);
+    clearBookList();
+    renderBookList(books);
 }
 
 
@@ -53,7 +84,7 @@ function submitForm(event) {
     event.preventDefault();
     const form = event.target;
     const { title, author, pages, read } = Object.fromEntries(new FormData(event.target));
-    addBook(title,author,pages,read == "on");
+    addBooktoLibrary(title,author,pages,read == "on");
     clearBookList();
     renderBookList(books);
     clearForm();
@@ -119,7 +150,7 @@ function renderNewBookForm() {
 }
 
 
-function addBook(title, author, pages, is_read) {
+function addBooktoLibrary(title, author, pages, is_read) {
     const newBook = new Book(title, author, pages, is_read);
     books.push(newBook);
 }
