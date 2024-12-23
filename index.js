@@ -15,8 +15,8 @@ books.push(theHobbit)
 
 const display = document.querySelector(".display");
 const formContainer = document.querySelector(".formContainer");
-const addBook = document.querySelector(".myButton");
-addBook.onclick = (e) => renderNewBookForm();
+const addBookButton = document.querySelector(".myButton");
+addBookButton.onclick = (e) => renderNewBookForm();
 
 function renderBookList(bookList) {
     let table = document.createElement("table");
@@ -48,21 +48,37 @@ function renderBookList(bookList) {
     }
 }
 
-function clearTable() {
+
+function submitForm(event) {
+    event.preventDefault();
+    const form = event.target;
+    const { title, author, pages, read } = Object.fromEntries(new FormData(event.target));
+    addBook(title,author,pages,read == "on");
+    clearBookList();
+    renderBookList(books);
+    clearForm();
+
+}
+
+
+function clearBookList() {
     display.removeChild(display.firstChild)
 }
 
-function renderNewBookForm() {
+
+function clearForm() {
     if (formContainer.firstChild) {
         formContainer.removeChild(formContainer.firstChild);
     }
+}
 
+
+function renderNewBookForm() {
+    clearForm();
     const form = document.createElement("form");
     form.method = "post";
     form.action="my-handling-form-page";
-    form.addEventListener("submit",function(event){
-        event.preventDefault();
-        alert("submitted")})
+    form.addEventListener("submit",submitForm)
     formContainer.appendChild(form);
 
     for (let key in theHobbit) {
@@ -73,6 +89,7 @@ function renderNewBookForm() {
         name.textContent = key;
         form.appendChild(name);
         const input = document.createElement("input");
+        input.required = true;
         switch(typeof theHobbit[key]) {
             case "number":
                 console.log(typeof theHobbit[key]);
@@ -81,6 +98,7 @@ function renderNewBookForm() {
             case "boolean":
                 console.log(typeof theHobbit[key]);
                 input.type = "checkbox";
+                input.required = false;
                 break;
             default:
                 console.log(typeof theHobbit[key]);
@@ -89,16 +107,21 @@ function renderNewBookForm() {
         }
         input.id = key;
         input.name = key;
-        input.required = true;
         form.appendChild(input);
         
     }
-    
+
     const button = document.createElement("button");
     button.type = "submit";
     button.classList.add("myButton");
     button.textContent = "Add Book";
     form.appendChild(button);
+}
+
+
+function addBook(title, author, pages, is_read) {
+    const newBook = new Book(title, author, pages, is_read);
+    books.push(newBook);
 }
 
 renderBookList(books);
