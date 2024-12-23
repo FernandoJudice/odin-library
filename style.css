@@ -1,0 +1,82 @@
+ body {
+    display: flex;
+    justify-content: center;
+    color: #293241;
+}
+
+.myButton {
+    color: white;
+    margin: 0px 16px;
+    background-color: olivedrab;
+    padding: 16px 24px;
+    border: 16px;
+    border-radius: 8px;
+    font-weight: bold;
+}
+
+table,th, td {
+    border: 1px solid;
+}
+/*
+.container {
+    background-color: #98c1d9;
+    width: max-content;
+    padding: 1em;
+    border-radius: 16px;
+    height: max-content;
+    border: solid 1px #205dad;
+}
+
+.keyboard {
+    display: flex;
+    padding: 1em 0;
+}
+
+.left,.right {
+    flex: auto;
+}
+
+.left {
+    flex: 3 0 auto;
+}
+
+.display {
+    height: 1em;
+    width: 16em;
+    background-color: whitesmoke;
+    padding: 1em;
+    border-radius: 4px;
+    text-align: right;
+}
+
+.row {
+    display: flex;
+}
+
+.calcButton {
+    background-color: #e0fbfc;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    border-radius: 4px;
+    margin: 8px;
+    padding: 1em 0;
+    border-color: #3d5A80;
+}
+
+.calcButton.operator {
+    color: #3066be;
+    font-weight: bold;
+}
+
+.calcButton.equal {
+    background-color: #3d5A80;
+    color:#e0fbfc;
+    font-weight: bold;
+}
+
+.calcButton.clear {
+    color: #ee6c4d;
+    font-weight: bold;
+
+} */
