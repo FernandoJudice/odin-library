@@ -16,17 +16,20 @@ class Book {
     }   
 }
 
-function Library(books) {
-    this.books = books;
-    this.addBooktoLibrary = function(title, author, pages, is_read) {
+class Library {
+    books = [];
+    constructor(books) {
+        this.books = books;
+    }
+    addBooktoLibrary(title, author, pages, is_read) {
         const newBook = new Book(title, author, pages, is_read);
-        books.push(newBook);
+        this.books.push(newBook);
     }
-    this.removeBook = function(index) {
-        books.splice(index,1);
+    removeBook(index) {
+        this.books.splice(index,1);
     }
-    this.toggleRead = function toggleRead(index) {
-        books[index].read = !books[index].read;
+    toggleRead(index) {
+        this.books[index].read = !this.books[index].read;
     }
 }
 
